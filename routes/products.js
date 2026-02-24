@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../Models/database');
 const authenticateToken  = require('../middleware/authMiddleware');
+const db = require('../models/database');
 
 router.get('/', (req, res) => {
     db.all('SELECT * FROM products', [], (err, rows) => {
@@ -24,6 +24,19 @@ router.get('/:id', (req, res) => {
         res.json(row);
     });
 });
+
+router.get('/:category', (req, res) =>{
+    const category = req.params.category;
+    db.get('SELECT * FROM products WHERE category = ?', [category], (err, rows)=>{
+        if(err){
+            return res.status(500).json({message: 'Database error', error: err.message})
+        }
+        if(!rows){
+            return res.status(404).json({message:'No products found in this category'})
+        }
+        res.json(rows);
+    })
+})
 
 router.post('/', authenticateToken, (req, res) => {
     const {name, description, price, category, stock} = req.body;
