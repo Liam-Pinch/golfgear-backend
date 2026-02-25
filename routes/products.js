@@ -25,9 +25,9 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.get('/:category', (req, res) =>{
+router.get('/category/:category', (req, res) =>{
     const category = req.params.category;
-    db.get('SELECT * FROM products WHERE category = ?', [category], (err, rows)=>{
+    db.all('SELECT * FROM products WHERE category = ?', [category], (err, rows)=>{
         if(err){
             return res.status(500).json({message: 'Database error', error: err.message})
         }
