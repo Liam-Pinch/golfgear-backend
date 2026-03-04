@@ -1,4 +1,4 @@
-const db = require('./models/database');
+const db = require('./Models/database');
 
 const seedProducts = [
     {name: "Callaway Paradym Driver", description: "The Callaway Paradym Driver is designed for maximum distance and forgiveness, featuring a high-strength titanium face and adjustable weighting.", price: 499.99, category: "Drivers", stock: 10},

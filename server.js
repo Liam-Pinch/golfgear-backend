@@ -1,14 +1,14 @@
 require ('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const db = require('./models/database');
+const db = require('./Models/database');
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 app.use('/auth', require('./routes/auth'));
 app.use('/products', require('./routes/products'));
-app.use('/baskets', require('./routes/customerbasket'));
+app.use('/basket', require('./routes/customerbasket'));
 
 app.get('/', (req, res) => {
     res.send('GolfGear backend is now live!');

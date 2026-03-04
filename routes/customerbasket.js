@@ -1,12 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../models/database');
+const db = require('../Models/database');
 const authenticateToken = require('../middleware/authMiddleware');
 
 // GET basket items
 router.get('/', authenticateToken, (req, res) => {
+    
     const userId = req.user.id;
-    db.all('SELECT * FROM baskets WHERE user_id = ?', [userId], (err, rows) => {
+
+    const query = `SELECT 
+    b.id,
+    b.quantity,
+    b.product_id,
+    p.name,
+    p.price
+    FROM baskets b
+    INNER JOIN products p ON b.product_id = p.id
+    WHERE b.user_id = ?`;
+
+    db.all(query, [userId], (err, rows) => {
         if (err) return res.status(500).json({ message: 'Database error', error: err.message });
         res.json(rows);
     });
@@ -16,7 +28,10 @@ router.get('/', authenticateToken, (req, res) => {
 router.post('/', authenticateToken, (req, res) => {
     const userId = req.user.id;
     const { product_id, quantity } = req.body;
+    console.log("Body:", req.body);
+    console.log("userId:", userId);
     if (!product_id || !quantity) return res.status(400).json({ message: 'Product ID and Quantity are required' });
+
 
     db.get('SELECT * FROM baskets WHERE user_id = ? AND product_id = ?', [userId, product_id], (err, row) => {
         if (err) return res.status(500).json({ message: 'Database error', error: err.message });
@@ -32,7 +47,7 @@ router.post('/', authenticateToken, (req, res) => {
                 'INSERT INTO baskets (user_id, product_id, quantity) VALUES (?, ?, ?)',
                 [userId, product_id, quantity],
                 function(err) {
-                    if (err) return res.status(500).json({ message: 'Database error', error: err.message });
+                    if (err) return res.status(500).json({ message: 'Database error Insert', error: err.message });
                     res.status(201).json({
                         message: 'Product added to basket',
                         basket: { id: this.lastID, user_id: userId, product_id, quantity }

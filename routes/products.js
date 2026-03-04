@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authenticateToken  = require('../middleware/authMiddleware');
-const db = require('../models/database');
+const db = require('../Models/database');
 
 router.get('/', (req, res) => {
     db.all('SELECT * FROM products', [], (err, rows) => {

@@ -1,4 +1,4 @@
-const db = require('../models/database');
+const db = require('../Models/database');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -21,7 +21,8 @@ exports.register = async (req, res) => {
             res.status(201).json({
                 id: this.lastID,
                 name,
-                email
+                email,
+                message: 'User registered successfully'
             });
         }
 
